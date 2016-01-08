@@ -16,7 +16,7 @@ type Ward =
 type AdministrationStatus =
     | Administered = 0
     | NotGiven = 1
-    | NotDue = 2
+    | Due = 2   
 
 [<DataContract>]
 type Administration =
@@ -166,9 +166,33 @@ module Db =
                           Dose = "intravenous infusion at 5 mg/hour, Single Dose"
                           Start = "01 Jan 2015 at 08:00"
                           Prescriber = "Chris Dobson"
-                          Administrations = [||]}
-                    |]
-            })
+                          Administrations = 
+                            [0..int((System.DateTime.Now.Date - System.DateTime.Now.AddMonths(-2)).TotalDays)]
+                            |> List.map(fun dt -> 
+                                            let adminDateTime = System.DateTime.Now.AddMonths(-2).AddDays(float dt)
+                                            {
+                                                AdminDateTime = adminDateTime;
+                                                Status = if adminDateTime.Date = DateTime.Now.Date then AdministrationStatus.NotGiven else AdministrationStatus.Due
+                                            })
+                            |> List.toArray                   
+                        }
+                        { Id = 2
+                          Drug = "Paracetamol"
+                          Dose = "250mg oral, Four times a day"
+                          Start = "01 Jan 2015 at 08:00"
+                          Prescriber = "Chris Dobson"
+                          Administrations = 
+                            [0..int((System.DateTime.Now.Date - System.DateTime.Now.AddMonths(-2)).TotalDays)]
+                            |> List.map(fun dt -> 
+                                            let adminDateTime = System.DateTime.Now.AddMonths(-2).AddDays(float dt)
+                                            {
+                                                AdminDateTime = adminDateTime;
+                                                Status = if adminDateTime.Date = DateTime.Now.Date then AdministrationStatus.NotGiven else AdministrationStatus.Due
+                                            })
+                            |> List.toArray                   
+                        }
+                     |]
+             })
 
         patients.Add(2,
             {
