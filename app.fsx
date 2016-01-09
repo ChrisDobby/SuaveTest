@@ -12,7 +12,7 @@
 
 #load "Db.fs"
 #load "Rest.fs"
-#load "SignalR.fs"
+//#load "SignalR.fs"
 
 open Suave
 open Suave.Filters
@@ -62,7 +62,7 @@ let app =
          POST >=> choose
             [path "/prescribe" >=> mapJson
                 (fun newPrescription -> let patient = Db.addPrescription newPrescription
-                                        SignalR.patientUpdate (patient.Id) |> Async.Start
+//                                        SignalR.patientUpdate (patient.Id) |> Async.Start
                                         patient)]
 
          RequestErrors.NOT_FOUND "Found no handlers"
