@@ -16,5 +16,4 @@ let serverConfig =
       logger = Logging.Loggers.saneDefaultsFor Logging.LogLevel.Warn
       bindings = [ Types.HttpBinding.mk' Types.HTTP "127.0.0.1" port ] }
 
-setupDb()
 Web.startWebServer serverConfig app
