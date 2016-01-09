@@ -1,4 +1,12 @@
 #r "packages/Suave/lib/net40/Suave.dll"
+#r "packages/Microsoft.Bcl/lib/net40/System.IO.dll"
+#r "packages/Microsoft.Bcl/lib/net40/System.Runtime.dll"
+#r "packages/Microsoft.Bcl/lib/net40/System.Threading.Tasks.dll"
+#r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.dll"
+#r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.Extensions.dll"
+#r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.Primitives.dll"
+#r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.WebRequest.dll"
+#r "packages/Newtonsoft.Json/lib/net40/Newtonsoft.Json.dll"
 #r "packages/Microsoft.AspNet.SignalR.Client/lib/net40/Microsoft.AspNet.SignalR.Client.dll"
 #r "System.Runtime.Serialization.dll"
 
