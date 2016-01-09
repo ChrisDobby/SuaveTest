@@ -21,7 +21,7 @@ open Suave.Operators
 open Suave.Json
 open SuaveRestApi.Db
 open SuaveRestApi.Rest
-open SuaveRestApi.SignalR
+//open SuaveRestApi.SignalR
 
 let jsonOK json = 
     (OK (json) 
