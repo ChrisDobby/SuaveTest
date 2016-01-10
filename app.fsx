@@ -7,12 +7,12 @@
 // #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.Primitives.dll"
 // #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.WebRequest.dll"
 // #r "packages/Newtonsoft.Json/lib/net40/Newtonsoft.Json.dll"
-// #r "packages/Microsoft.AspNet.SignalR.Client/lib/net40/Microsoft.AspNet.SignalR.Client.dll"
+ #r "packages/Microsoft.AspNet.SignalR.Client/lib/net40/Microsoft.AspNet.SignalR.Client.dll"
 #r "System.Runtime.Serialization.dll"
 
 #load "Db.fs"
 #load "Rest.fs"
-//#load "SignalR.fs"
+#load "SignalR.fs"
 
 open Suave
 open Suave.Filters
@@ -21,7 +21,7 @@ open Suave.Operators
 open Suave.Json
 open SuaveRestApi.Db
 open SuaveRestApi.Rest
-//open SuaveRestApi.SignalR
+open SuaveRestApi.SignalR
 
 let jsonOK json = 
     (OK (json) 
@@ -62,7 +62,7 @@ let app =
          POST >=> choose
             [path "/prescribe" >=> mapJson
                 (fun newPrescription -> let patient = Db.addPrescription newPrescription
-//                                        SignalR.patientUpdate (patient.Id) |> Async.Start
+                                        SignalR.patientUpdate (patient.Id) |> Async.Start
                                         patient)]
 
          RequestErrors.NOT_FOUND "Found no handlers"
