@@ -1,13 +1,5 @@
 #r "packages/Suave/lib/net40/Suave.dll"
-// #r "packages/Microsoft.Bcl/lib/net40/System.IO.dll"
-// #r "packages/Microsoft.Bcl/lib/net40/System.Runtime.dll"
-// #r "packages/Microsoft.Bcl/lib/net40/System.Threading.Tasks.dll"
-// #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.dll"
-// #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.Extensions.dll"
-// #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.Primitives.dll"
-// #r "packages/Microsoft.Net.Http/lib/net40/System.Net.Http.WebRequest.dll"
-// #r "packages/Newtonsoft.Json/lib/net40/Newtonsoft.Json.dll"
- #r "packages/Microsoft.AspNet.SignalR.Client/lib/net40/Microsoft.AspNet.SignalR.Client.dll"
+#r "packages/Microsoft.AspNet.SignalR.Client/lib/net40/Microsoft.AspNet.SignalR.Client.dll"
 #r "System.Runtime.Serialization.dll"
 
 #load "Db.fs"
@@ -23,10 +15,15 @@ open SuaveRestApi.Db
 open SuaveRestApi.Rest
 open SuaveRestApi.SignalR
 
+let addHeaders ctx =
+    ctx
+    >=> Writers.setMimeType "application/json; charset=utf-8" 
+    >=> Writers.setHeader "Access-Control-Allow-Origin" "*"
+    >=> Writers.setHeader "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS"
+    >=> Writers.setHeader "Access-Control-Allow-Headers" "Content-Type, x-xsrf-token"
+
 let jsonOK json = 
-    (OK (json) 
-        >=> Writers.setMimeType "application/json; charset=utf-8" 
-        >=> Writers.setHeader "Access-Control-Allow-Origin" "*")
+    (OK (json) |> addHeaders)
 
 let patientsOnWard wardId = fun ctx -> async {
     let! json = Rest.json (fun () -> Db.getPatients wardId)
@@ -60,10 +57,14 @@ let app =
             ]
 
          POST >=> choose
-            [path "/prescribe" >=> mapJson
-                (fun newPrescription -> let patient = Db.addPrescription newPrescription
-                                        SignalR.patientUpdate (patient.Id) |> Async.Start
-                                        patient)]
+            [
+                path "/prescribe" >=> mapJson
+                    (fun newPrescription -> let patient = Db.addPrescription newPrescription
+                                            SignalR.patientUpdate (patient.Id) |> Async.Start
+                                            patient) 
+                    |> addHeaders
+            ]
+         OPTIONS >=> OK("OK") |> addHeaders
 
-         RequestErrors.NOT_FOUND "Found no handlers"
+         RequestErrors.NOT_FOUND "Found no handlers" |> addHeaders
         ]
