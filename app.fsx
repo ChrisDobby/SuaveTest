@@ -60,7 +60,7 @@ let app =
             [
                 path "/prescribe" >=> mapJson
                     (fun newPrescription -> let patient = Db.addPrescription newPrescription
-                                            SignalR.patientUpdate (patient.Id) |> Async.Start
+                                            SignalR.patientUpdate (patient.Id) (newPrescription.Creator) |> Async.Start
                                             patient) 
                     |> addHeaders
             ]

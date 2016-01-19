@@ -42,6 +42,8 @@ type Prescription =
         Prescriber : string;
         [<field: DataMember(Name = "administrations")>]
         Administrations : Administration array;
+        [<field: DataMember(Name = "creator")>]
+        Creator: string;
     }
 
 [<DataContract>]
@@ -102,6 +104,8 @@ type NewPrescription =
         Dose : string;
         [<field: DataMember(Name = "start")>]
         Start : string;
+        [<field: DataMember(Name = "creator")>]
+        Creator : string;
     }
 
 module Db =
@@ -166,6 +170,7 @@ module Db =
                           Dose = "intravenous infusion at 5 mg/hour, Single Dose"
                           Start = "01 Jan 2015 at 08:00"
                           Prescriber = "Chris Dobson"
+                          Creator = ""
                           Administrations = 
                             [0..int((System.DateTime.Now.Date - System.DateTime.Now.AddMonths(-2)).TotalDays)]
                             |> List.map(fun dt -> 
@@ -181,6 +186,7 @@ module Db =
                           Dose = "250mg oral, Four times a day"
                           Start = "01 Jan 2015 at 08:00"
                           Prescriber = "Chris Dobson"
+                          Creator = ""
                           Administrations = 
                             [0..int((System.DateTime.Now.Date - System.DateTime.Now.AddMonths(-2)).TotalDays)]
                             |> List.map(fun dt -> 
@@ -292,6 +298,7 @@ module Db =
                                       Dose = newPrescription.Dose
                                       Start = newPrescription.Start
                                       Prescriber = "Oops not logged in"
+                                      Creator = newPrescription.Creator
                                       Administrations = [||]}
                                    ]
                     |> List.toArray
